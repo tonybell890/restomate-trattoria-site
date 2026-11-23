@@ -1,47 +1,28 @@
 const MIN_PARTY = 1;
 const MAX_PARTY = 12;
-const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
-const fmtMonth = new Intl.DateTimeFormat('it-IT', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-const fmtLong = new Intl.DateTimeFormat('it-IT', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
 const el = id => document.getElementById(id);
-
-/* Contenuti segnaposto: sostituire con il menu reale dell'osteria. */
-const MENU = {
-    Antipasti: [
-        ['Parmigiana di melanzane', 'Come da tradizione campana', '9'],
-        ['Frittura di paranza', 'Pescato del giorno, limone', '12'],
-        ['Tagliere di salumi e formaggi', 'Prodotti del territorio', '14'],
-        ['Alici marinate', 'Olio, aglio e prezzemolo', '10']
-    ],
-    Primi: [
-        ['Scialatielli ai frutti di mare', 'Pasta fresca fatta in casa', '16'],
-        ['Paccheri al ragù napoletano', 'Cottura lenta di ore', '13'],
-        ['Spaghetti alle vongole', 'Vongole veraci, pomodorino', '15'],
-        ['Ravioli di ricotta e limone', 'Burro e salvia', '13']
-    ],
-    Secondi: [
-        ['Pesce del giorno all\'acqua pazza', 'Pomodorini e basilico', '20'],
-        ['Polpo alla Luciana', 'Tenero, in umido', '18'],
-        ['Tagliata di manzo', 'Rucola e scaglie di grana', '19'],
-        ['Provola alla brace', 'Con verdure di stagione', '12']
-    ],
-    Dolci: [
-        ['Delizia al limone', 'Dolce tipico della costiera', '6'],
-        ['Babà al rum', 'Con crema chantilly', '6'],
-        ['Pastiera', 'Ricetta di famiglia', '6'],
-        ['Sorbetto al limone', 'Fatto in casa', '5']
-    ],
-    Vini: [
-        ['Falanghina del Sannio', 'Calice', '5'],
-        ['Fiano di Avellino', 'Calice', '6'],
-        ['Aglianico', 'Calice', '6'],
-        ['Cantina campana', 'Chiedi la carta dei vini', '-']
-    ]
-};
+const LANGS = ['it', 'en'];
+const LOCALES = { it: 'it-IT', en: 'en-GB' };
 
 const state = {
-    base: '', info: null, party: 2, year: 0, month: 0, date: null,
-    slots: [], slot: null, key: null, busy: false, loadId: 0, timer: null, controller: null
+    lang: 'it', base: '', info: null, party: 2, year: 0, month: 0, date: null,
+    slots: [], slot: null, key: null, busy: false, loadId: 0, timer: null, controller: null,
+    step: 1, category: 'starters', receipt: null, fatal: null, slotsMessage: null
+};
+
+const t = (key, vars = {}) => {
+    let text = I18N[state.lang][key] ?? I18N.it[key] ?? key;
+    for (const [name, value] of Object.entries(vars)) text = text.replaceAll(`{${name}}`, value);
+    return text;
+};
+const people = n => t(n === 1 ? 'people.one' : 'people.many', { n });
+const fmtMonth = () => new Intl.DateTimeFormat(LOCALES[state.lang], { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fmtLong = () => new Intl.DateTimeFormat(LOCALES[state.lang], { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+const dayLabel = value => fmtLong().format(new Date(`${value}T12:00:00Z`));
+const weekdays = () => {
+    const base = new Date(Date.UTC(2024, 0, 1));
+    return [0, 1, 2, 3, 4, 5, 6].map(i => new Intl.DateTimeFormat(LOCALES[state.lang], { weekday: 'short', timeZone: 'UTC' })
+        .format(new Date(base.getTime() + i * 86400000)));
 };
 
 class ApiError extends Error {
@@ -52,6 +33,51 @@ class ApiError extends Error {
     }
 }
 
+/* ---------- lingua ---------- */
+
+function applyLanguage() {
+    document.documentElement.lang = state.lang;
+    document.title = t('meta.title');
+    el('meta-desc').setAttribute('content', t('meta.desc'));
+    document.querySelectorAll('[data-i18n]').forEach(n => { n.textContent = t(n.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(n => { n.innerHTML = t(n.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-attrs]').forEach(n => {
+        for (const pair of n.dataset.i18nAttrs.split(';')) {
+            const [attr, key] = pair.split(':');
+            n.setAttribute(attr, t(key));
+        }
+    });
+    document.querySelectorAll('#lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
+    el('lang').dataset.active = state.lang;
+    renderParty();
+    renderMenu(state.category);
+    renderGalleryLabels();
+    if (state.info) renderCalendar();
+    if (state.fatal) showFatal(state.fatal);
+    else if (state.slotsMessage) showSlotsMessage(state.slotsMessage.key, state.slotsMessage.isError);
+    else if (state.slots.length) renderSlots();
+    else if (!state.date) showSlotsMessage('slots.pick');
+    if (state.slot) el('chosen-text').textContent = chosenText();
+    if (state.receipt) fillConfirmation();
+}
+
+function setLanguage(lang) {
+    if (!LANGS.includes(lang) || lang === state.lang) return;
+    state.lang = lang;
+    try { localStorage.setItem('lang', lang); } catch { /* ignore */ }
+    applyLanguage();
+}
+
+function detectLanguage() {
+    try {
+        const saved = localStorage.getItem('lang');
+        if (LANGS.includes(saved)) return saved;
+    } catch { /* ignore */ }
+    const fromUrl = new URLSearchParams(location.search).get('lang');
+    if (LANGS.includes(fromUrl)) return fromUrl;
+    return (navigator.language || 'it').toLowerCase().startsWith('it') ? 'it' : 'en';
+}
+
 /* ---------- configurazione e API ---------- */
 
 async function loadConfig() {
@@ -60,20 +86,20 @@ async function loadConfig() {
         const response = await fetch('config.json', { cache: 'no-store' });
         config = await response.json();
     } catch {
-        throw new Error('Impossibile leggere config.json.');
+        throw new ApiError(-1, 'config');
     }
     const params = new URLSearchParams(location.search);
     const restaurantId = params.get('restaurant') || config.restaurantId || '';
     const apiBase = params.get('api') || config.apiBase || '';
     const isGuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(restaurantId);
-    if (!isGuid || /^0{8}-/.test(restaurantId)) throw new Error('Prenotazioni non ancora configurate.');
+    if (!isGuid || /^0{8}-/.test(restaurantId)) throw new ApiError(-1, 'config');
     let origin;
     try {
         const url = new URL(apiBase);
         if (url.protocol !== 'http:' && url.protocol !== 'https:') throw new Error();
         origin = url.origin;
     } catch {
-        throw new Error('Prenotazioni non ancora configurate.');
+        throw new ApiError(-1, 'config');
     }
     return `${origin}/api/v1/restaurants/${restaurantId}`;
 }
@@ -99,20 +125,12 @@ async function api(path, { method = 'GET', body, headers = {}, signal } = {}) {
 }
 
 function describe(error) {
-    if (error.status === 0) return 'Impossibile contattare il servizio di prenotazione. Riprova tra poco.';
-    if (error.status === 429) return 'Troppe richieste ravvicinate. Attendi un minuto e riprova.';
-    switch (error.code) {
-        case 'no_availability': return 'Questo orario non è più disponibile. Scegline un altro.';
-        case 'restaurant_not_found': return 'Ristorante non trovato o non attivo.';
-        case 'invalid_booking_time': return 'La data o l\'orario scelti non sono prenotabili.';
-        case 'invalid_party_size': return 'Il numero di persone non è valido.';
-        case 'contact_required': return 'Indica almeno un\'email o un numero di telefono.';
-        case 'restaurant_busy': return 'Stiamo aggiornando le disponibilità. Riprova tra qualche secondo.';
-        case 'idempotency_conflict': return 'La richiesta non è valida. Ricarica la pagina e riprova.';
-        default: return error.status >= 500
-            ? 'Si è verificato un errore del servizio. Riprova più tardi.'
-            : 'Richiesta non valida. Controlla i dati inseriti.';
-    }
+    if (error.status === -1) return t('err.config');
+    if (error.status === 0) return t('err.network');
+    if (error.status === 429) return t('err.429');
+    const key = `err.${error.code}`;
+    if (I18N.it[key]) return t(key);
+    return error.status >= 500 ? t('err.server') : t('err.generic');
 }
 
 function newKey() {
@@ -128,27 +146,28 @@ function newKey() {
 
 const ymd = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 const monthIndex = value => Number(value.slice(0, 4)) * 12 + Number(value.slice(5, 7)) - 1;
-const dayLabel = value => fmtLong.format(new Date(`${value}T12:00:00Z`));
-const people = n => `${n} ${n === 1 ? 'persona' : 'persone'}`;
+const chosenText = () => `${people(state.party)} · ${dayLabel(state.date)} · ${t('chosen.at')} ${state.slot.localTime}`;
 
-function showStatus(message) {
+let statusError = null;
+function showStatus(error) {
+    statusError = error || null;
     const box = el('status');
-    box.textContent = message || '';
-    box.className = message ? 'status error' : 'status';
+    box.textContent = error ? describe(error) : '';
+    box.className = error ? 'status error' : 'status';
 }
 
 /* ---------- schermate della prenotazione ---------- */
 
 function goStep(n) {
+    state.step = n;
     for (const i of [1, 2, 3]) el(`step-${i}`).hidden = i !== n;
     for (const li of el('steps').children) {
         const s = Number(li.dataset.step);
-        li.classList.toggle('active', s === n);
-        li.classList.toggle('done', s < n);
+        li.classList.toggle('active', s === n && n < 3);
+        li.classList.toggle('done', s < n || n === 3);
     }
-    showStatus('');
-    const target = n === 3 ? el('step-3') : el('book-title');
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showStatus(null);
+    el(n === 3 ? 'step-3' : 'book-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (n === 3) el('step-3').focus({ preventScroll: true });
     if (n === 2) setTimeout(() => el('name').focus({ preventScroll: true }), 300);
 }
@@ -174,7 +193,7 @@ function changeParty(delta) {
 function renderCalendar() {
     const grid = el('calendar-grid');
     grid.replaceChildren();
-    for (const name of WEEKDAYS) {
+    for (const name of weekdays()) {
         const head = document.createElement('div');
         head.className = 'cal-head';
         head.textContent = name;
@@ -197,7 +216,7 @@ function renderCalendar() {
         button.addEventListener('click', () => selectDate(value));
         grid.append(button);
     }
-    el('cal-title').textContent = fmtMonth.format(new Date(Date.UTC(state.year, state.month, 1)));
+    el('cal-title').textContent = fmtMonth().format(new Date(Date.UTC(state.year, state.month, 1)));
     const current = state.year * 12 + state.month;
     el('cal-prev').disabled = current <= monthIndex(state.info.today);
     el('cal-next').disabled = current >= monthIndex(state.info.lastBookableDate);
@@ -218,12 +237,13 @@ function selectDate(value) {
 
 /* ---------- orari ---------- */
 
-function showSlotsMessage(message, isError = false) {
+function showSlotsMessage(key, isError = false) {
+    state.slotsMessage = { key, isError };
     const box = el('slots');
     box.replaceChildren();
     const p = document.createElement('p');
     p.className = isError ? 'field-error' : 'muted';
-    p.textContent = message;
+    p.textContent = isError && typeof key === 'object' ? describe(key) : t(key);
     box.append(p);
 }
 
@@ -233,11 +253,12 @@ function scheduleSlots() {
     state.loadId++;
     state.slot = null;
     state.key = null;
+    state.slots = [];
     if (!state.date) {
-        showSlotsMessage('Seleziona un giorno per vedere gli orari.');
+        showSlotsMessage('slots.pick');
         return;
     }
-    showSlotsMessage('Cerco gli orari disponibili…');
+    showSlotsMessage('slots.searching');
     state.timer = setTimeout(loadSlots, 250);
 }
 
@@ -253,21 +274,22 @@ async function loadSlots() {
     } catch (error) {
         if (error.name === 'AbortError' || id !== state.loadId) return;
         state.slots = [];
-        showSlotsMessage(describe(error), true);
+        showSlotsMessage(error, true);
     }
 }
 
 function renderSlots() {
     const box = el('slots');
     box.replaceChildren();
+    state.slotsMessage = null;
     if (state.slots.length === 0) {
-        showSlotsMessage('Nessun orario disponibile per questo giorno e questo numero di persone. Prova un altro giorno.');
+        showSlotsMessage('slots.none');
         return;
     }
     const groups = [
-        ['Pranzo', s => !s.nextDay && Number(s.localTime.slice(0, 2)) < 16],
-        ['Cena', s => !s.nextDay && Number(s.localTime.slice(0, 2)) >= 16],
-        ['Dopo mezzanotte', s => s.nextDay]
+        ['slots.lunch', s => !s.nextDay && Number(s.localTime.slice(0, 2)) < 16],
+        ['slots.dinner', s => !s.nextDay && Number(s.localTime.slice(0, 2)) >= 16],
+        ['slots.late', s => s.nextDay]
     ];
     for (const [title, test] of groups) {
         const items = state.slots.filter(test);
@@ -275,7 +297,7 @@ function renderSlots() {
         const wrap = document.createElement('div');
         wrap.className = 'slots-group';
         const heading = document.createElement('h4');
-        heading.textContent = title;
+        heading.textContent = t(title);
         const list = document.createElement('div');
         list.className = 'slot-list';
         for (const slot of items) {
@@ -294,16 +316,16 @@ function renderSlots() {
 function selectSlot(slot) {
     state.slot = slot;
     state.key = null;
-    el('chosen-text').textContent = `${people(state.party)} · ${dayLabel(state.date)} · ore ${slot.localTime}`;
+    el('chosen-text').textContent = chosenText();
     goStep(2);
 }
 
 /* ---------- modulo ---------- */
 
-function setFieldError(field, message) {
+function setFieldError(field, key) {
     const input = el(field);
-    el(`${field}-error`).textContent = message || '';
-    if (message) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+    el(`${field}-error`).textContent = key ? t(key) : '';
+    if (key) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
 }
 
 function validate() {
@@ -311,9 +333,9 @@ function validate() {
     const email = el('email').value.trim();
     const phone = el('phone').value.trim();
     const errors = {};
-    if (!name) errors.name = 'Inserisci il tuo nome.';
-    if (email && !el('email').checkValidity()) errors.email = 'Inserisci un indirizzo email valido.';
-    if (!email && !phone) errors.phone = 'Indica almeno un\'email o un numero di telefono.';
+    if (!name) errors.name = 'val.name';
+    if (email && !el('email').checkValidity()) errors.email = 'val.email';
+    if (!email && !phone) errors.phone = 'val.contact';
     for (const field of ['name', 'email', 'phone']) setFieldError(field, errors[field]);
     const first = ['name', 'email', 'phone'].find(field => errors[field]);
     if (first) el(first).focus();
@@ -323,12 +345,12 @@ function validate() {
 async function submit(event) {
     event.preventDefault();
     if (state.busy || !state.slot) return;
-    showStatus('');
+    showStatus(null);
     if (!validate()) return;
     state.busy = true;
     const button = el('submit');
     button.disabled = true;
-    button.textContent = 'Invio in corso…';
+    button.textContent = t('form.sending');
     state.key ??= newKey();
     const email = el('email').value.trim();
     const phone = el('phone').value.trim();
@@ -337,82 +359,86 @@ async function submit(event) {
     if (phone) body.phone = phone;
     try {
         const receipt = await api('/reservations', { method: 'POST', headers: { 'Idempotency-Key': state.key }, body });
-        showConfirmation(receipt);
+        state.receipt = receipt;
+        fillConfirmation();
+        goStep(3);
     } catch (error) {
-        showStatus(describe(error));
+        showStatus(error);
         if (error.code === 'idempotency_conflict') state.key = null;
         if (error.code === 'no_availability' || error.code === 'invalid_booking_time') {
             state.key = null;
             state.slot = null;
             goStep(1);
-            showStatus(describe(error));
+            showStatus(error);
             await loadSlots();
         }
     } finally {
         state.busy = false;
         button.disabled = false;
-        button.textContent = 'Conferma la prenotazione';
+        button.textContent = t('form.submit');
     }
 }
 
-function showConfirmation(receipt) {
+function fillConfirmation() {
     el('c-date').textContent = dayLabel(state.date);
     el('c-time').textContent = state.slot.localTime;
-    el('c-party').textContent = people(receipt.partySize);
-    el('c-ref').textContent = String(receipt.id).slice(0, 8).toUpperCase();
-    goStep(3);
+    el('c-party').textContent = people(state.receipt.partySize);
+    el('c-ref').textContent = String(state.receipt.id).slice(0, 8).toUpperCase();
 }
 
-function restart() {
-    el('step-2').reset();
-    for (const f of ['name', 'email', 'phone']) setFieldError(f, '');
-    state.slot = null;
-    state.key = null;
-    scheduleSlots();
-    goStep(1);
-}
-
-function showFatal(message) {
+function showFatal(error) {
+    state.fatal = error;
     for (const id of ['party-minus', 'party-plus', 'cal-prev', 'cal-next']) el(id).disabled = true;
-    showSlotsMessage(message, true);
+    const box = el('slots');
+    box.replaceChildren();
+    const p = document.createElement('p');
+    p.className = 'field-error';
+    p.textContent = describe(error);
+    box.append(p);
 }
 
 /* ---------- menu, galleria, navigazione ---------- */
 
 function renderMenu(category) {
-    for (const tab of el('menu-tabs').children) tab.setAttribute('aria-selected', tab.dataset.cat === category ? 'true' : 'false');
+    state.category = category;
+    const tabs = el('menu-tabs');
+    if (!tabs.children.length) {
+        for (const key of Object.keys(MENU)) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'tab';
+            button.setAttribute('role', 'tab');
+            button.dataset.cat = key;
+            button.addEventListener('click', () => renderMenu(key));
+            tabs.append(button);
+        }
+    }
+    for (const tab of tabs.children) {
+        tab.textContent = t(`cat.${tab.dataset.cat}`);
+        tab.setAttribute('aria-selected', tab.dataset.cat === category ? 'true' : 'false');
+    }
     const panel = el('menu-panel');
     panel.replaceChildren();
-    for (const [name, description, price] of MENU[category]) {
+    const en = state.lang === 'en' ? 1 : 0;
+    for (const item of MENU[category]) {
         const dish = document.createElement('div');
         dish.className = 'dish';
         const top = document.createElement('div');
         top.className = 'dish-top';
         const n = document.createElement('span');
-        n.textContent = name;
+        n.textContent = item[en];
         const p = document.createElement('span');
-        p.textContent = price === '-' ? '' : `€ ${price}`;
+        p.textContent = item[4] === '-' ? '' : `€ ${item[4]}`;
         top.append(n, p);
         const d = document.createElement('p');
-        d.textContent = description;
+        d.textContent = item[2 + en];
         dish.append(top, d);
         panel.append(dish);
     }
 }
 
-function initMenu() {
-    const tabs = el('menu-tabs');
-    for (const category of Object.keys(MENU)) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'tab';
-        button.setAttribute('role', 'tab');
-        button.dataset.cat = category;
-        button.textContent = category;
-        button.addEventListener('click', () => renderMenu(category));
-        tabs.append(button);
-    }
-    renderMenu(Object.keys(MENU)[0]);
+function renderGalleryLabels() {
+    el('gallery').querySelectorAll('.g').forEach((b, i) => b.setAttribute('aria-label', t('gal.open', { n: i + 1 })));
 }
 
 function initGallery() {
@@ -424,7 +450,6 @@ function initGallery() {
         button.type = 'button';
         button.className = 'g';
         button.style.backgroundImage = `url(${src}), linear-gradient(135deg,#6b3a1d,#2a170b)`;
-        button.setAttribute('aria-label', `Apri foto ${i}`);
         button.addEventListener('click', () => {
             el('lb-img').style.backgroundImage = `url(${src})`;
             box.showModal();
@@ -456,6 +481,7 @@ function initPage() {
             toggle.setAttribute('aria-expanded', 'false');
         }
     });
+    document.querySelectorAll('#lang button').forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
     const observer = new IntersectionObserver(entries => {
         for (const entry of entries) {
             if (entry.isIntersecting) { entry.target.classList.add('in'); observer.unobserve(entry.target); }
@@ -467,8 +493,8 @@ function initPage() {
 /* ---------- avvio ---------- */
 
 async function init() {
+    state.lang = detectLanguage();
     initPage();
-    initMenu();
     initGallery();
     el('party-minus').addEventListener('click', () => changeParty(-1));
     el('party-plus').addEventListener('click', () => changeParty(1));
@@ -476,8 +502,7 @@ async function init() {
     el('cal-next').addEventListener('click', () => changeMonth(1));
     el('step-2').addEventListener('submit', submit);
     el('back').addEventListener('click', () => goStep(1));
-    el('again').addEventListener('click', restart);
-    renderParty();
+    applyLanguage();
     try {
         state.base = await loadConfig();
         state.info = await api('');
@@ -486,7 +511,7 @@ async function init() {
         state.month = m - 1;
         renderCalendar();
     } catch (error) {
-        showFatal(error instanceof ApiError ? describe(error) : error.message);
+        showFatal(error instanceof ApiError ? error : new ApiError(-1, 'config'));
     }
 }
 

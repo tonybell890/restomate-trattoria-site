@@ -1,103 +1,114 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="it">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Osteria Angolo Masuccio | Salerno</title>
-  <meta name="description" content="Osteria Angolo Masuccio a Salerno: cucina del territorio, vini campani e atmosfera conviviale. Prenota online.">
+  <meta name="description" content="" id="meta-desc">
   <meta name="theme-color" content="#16110e">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header" id="top">
     <a class="brand" href="#top" aria-label="Osteria Angolo Masuccio"><span class="brand-mark">AM</span><span class="brand-text">Osteria<br><strong>Angolo Masuccio</strong></span></a>
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav"><span class="sr-only">Menu</span><i></i><i></i><i></i></button>
-    <nav id="nav" class="nav" aria-label="Principale">
-      <a href="#storia">La storia</a><a href="#menu">Menu</a><a href="#galleria">Galleria</a><a href="#dove">Dove siamo</a>
-      <a class="btn btn-small" href="#prenota">Prenota</a>
-    </nav>
+    <div class="header-right">
+      <nav id="nav" class="nav" aria-label="Menu">
+        <a href="#storia" data-i18n="nav.story"></a><a href="#menu" data-i18n="nav.menu"></a><a href="#galleria" data-i18n="nav.gallery"></a><a href="#dove" data-i18n="nav.where"></a>
+        <a class="btn btn-small" href="#prenota" data-i18n="nav.book"></a>
+      </nav>
+      <div class="lang" id="lang" role="group" data-i18n-attrs="aria-label:lang.label">
+        <button type="button" data-lang="it" aria-pressed="true">IT</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        <span class="lang-thumb" aria-hidden="true"></span>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav"><span class="sr-only" data-i18n="nav.toggle"></span><i></i><i></i><i></i></button>
+    </div>
   </header>
   <main>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-bg" data-parallax></div>
       <div class="hero-inner">
-        <p class="eyebrow">Salerno &middot; Centro storico</p>
-        <h1 id="hero-title">Osteria<br>Angolo Masuccio</h1>
-        <p class="lead">Sapori campani, ingredienti del territorio e la convivialità di un angolo di Salerno.</p>
-        <div class="actions"><a class="btn" href="#prenota">Prenota un tavolo</a><a class="btn btn-ghost" href="#menu">Sfoglia il menu</a></div>
+        <p class="eyebrow" data-i18n="hero.eyebrow"></p>
+        <h1 id="hero-title" data-i18n-html="hero.title"></h1>
+        <p class="lead" data-i18n="hero.lead"></p>
+        <div class="actions"><a class="btn" href="#prenota" data-i18n="hero.cta"></a><a class="btn btn-ghost" href="#menu" data-i18n="hero.menu"></a></div>
       </div>
     </section>
     <section class="section" id="storia" aria-labelledby="storia-title">
       <div class="wrap split">
         <div class="reveal">
-          <p class="eyebrow dark">La nostra storia</p>
-          <h2 id="storia-title">Una tavola semplice, fatta con cura</h2>
-          <p>All'angolo tra vicoli e storia, l'osteria propone una cucina onesta: piatti della tradizione salernitana, pesce e verdure di stagione, paste fatte con calma e una cantina di vini campani.</p>
-          <p>Qui si viene per fermarsi: due chiacchiere, un calice, un piatto che sa di casa.</p>
-          <ul class="facts"><li><strong>Cucina</strong><span>del territorio</span></li><li><strong>Vini</strong><span>campani</span></li><li><strong>Atmosfera</strong><span>conviviale</span></li></ul>
+          <p class="eyebrow dark" data-i18n="story.eyebrow"></p>
+          <h2 id="storia-title" data-i18n="story.title"></h2>
+          <p data-i18n="story.p1"></p>
+          <p data-i18n="story.p2"></p>
+          <ul class="facts">
+            <li><strong data-i18n="facts.1k"></strong><span data-i18n="facts.1v"></span></li>
+            <li><strong data-i18n="facts.2k"></strong><span data-i18n="facts.2v"></span></li>
+            <li><strong data-i18n="facts.3k"></strong><span data-i18n="facts.3v"></span></li>
+          </ul>
         </div>
-        <div class="photo-stack reveal"><div class="photo p1" role="img" aria-label="Piatto della casa"></div><div class="photo p2" role="img" aria-label="Interno dell'osteria"></div></div>
+        <div class="photo-stack reveal"><div class="photo p1" role="img" data-i18n-attrs="aria-label:photo.1"></div><div class="photo p2" role="img" data-i18n-attrs="aria-label:photo.2"></div></div>
       </div>
     </section>
     <section class="section dark" id="menu" aria-labelledby="menu-title">
       <div class="wrap">
-        <div class="section-head reveal"><p class="eyebrow">Il menu</p><h2 id="menu-title">Cosa porti a tavola</h2>
-          <p class="muted-light">Il menu cambia con le stagioni. Chiedi in sala le proposte del giorno.</p></div>
-        <div class="tabs" id="menu-tabs" role="tablist" aria-label="Categorie del menu"></div>
+        <div class="section-head reveal"><p class="eyebrow" data-i18n="menu.eyebrow"></p><h2 id="menu-title" data-i18n="menu.title"></h2>
+          <p class="muted-light" data-i18n="menu.note"></p></div>
+        <div class="tabs" id="menu-tabs" role="tablist" data-i18n-attrs="aria-label:menu.tabs"></div>
         <div class="menu-panel" id="menu-panel" role="tabpanel" aria-live="polite"></div>
       </div>
     </section>
     <section class="section" id="galleria" aria-labelledby="gal-title">
       <div class="wrap">
-        <div class="section-head reveal"><p class="eyebrow dark">Galleria</p><h2 id="gal-title">Un assaggio dell'atmosfera</h2></div>
+        <div class="section-head reveal"><p class="eyebrow dark" data-i18n="gal.eyebrow"></p><h2 id="gal-title" data-i18n="gal.title"></h2></div>
         <div class="gallery reveal" id="gallery"></div>
-        <p class="social reveal">Altre foto su <a href="https://www.instagram.com/osteriaangolomasuccio/" target="_blank" rel="noopener">Instagram</a> e <a href="https://www.facebook.com/OsteriaAngoloMasuccio" target="_blank" rel="noopener">Facebook</a>.</p>
+        <p class="social reveal" data-i18n-html="gal.social"></p>
       </div>
     </section>
     <section class="section book" id="prenota" aria-labelledby="book-title">
       <div class="wrap">
-        <div class="section-head reveal"><p class="eyebrow">Prenota</p><h2 id="book-title">Riserva il tuo tavolo</h2><p class="muted-light">Conferma immediata, senza telefonate.</p></div>
+        <div class="section-head reveal"><p class="eyebrow" data-i18n="book.eyebrow"></p><h2 id="book-title" data-i18n="book.title"></h2><p class="muted-light" data-i18n="book.sub"></p></div>
         <div class="book-card reveal">
-          <ol class="steps" id="steps" aria-label="Avanzamento">
-            <li class="active" data-step="1"><span>1</span> Giorno e orario</li>
-            <li data-step="2"><span>2</span> I tuoi dati</li>
-            <li data-step="3"><span>3</span> Conferma</li>
+          <ol class="steps" id="steps" data-i18n-attrs="aria-label:steps.label">
+            <li class="active" data-step="1"><span>1</span><em data-i18n="steps.1"></em></li>
+            <li data-step="2"><span>2</span><em data-i18n="steps.2"></em></li>
+            <li data-step="3"><span>3</span><em data-i18n="steps.3"></em></li>
           </ol>
           <div class="status" id="status" role="alert"></div>
           <div class="step" id="step-1">
             <div class="pick-grid">
               <div class="panel">
-                <div class="party"><span class="label" id="party-name">Persone</span>
+                <div class="party"><span class="label" id="party-name" data-i18n="party.label"></span>
                   <div class="stepper" role="group" aria-labelledby="party-name">
-                    <button type="button" id="party-minus" aria-label="Una persona in meno">&minus;</button>
+                    <button type="button" id="party-minus" data-i18n-attrs="aria-label:party.minus">&minus;</button>
                     <output id="party-value" aria-live="polite">2</output>
-                    <button type="button" id="party-plus" aria-label="Una persona in più">+</button>
+                    <button type="button" id="party-plus" data-i18n-attrs="aria-label:party.plus">+</button>
                   </div></div>
-                <div class="cal-bar"><button type="button" id="cal-prev" aria-label="Mese precedente">&lsaquo;</button><strong id="cal-title"></strong><button type="button" id="cal-next" aria-label="Mese successivo">&rsaquo;</button></div>
+                <div class="cal-bar"><button type="button" id="cal-prev" data-i18n-attrs="aria-label:cal.prev">&lsaquo;</button><strong id="cal-title"></strong><button type="button" id="cal-next" data-i18n-attrs="aria-label:cal.next">&rsaquo;</button></div>
                 <div class="cal-grid" id="calendar-grid"></div>
               </div>
-              <div class="panel"><h3>Orari disponibili</h3><div id="slots" aria-live="polite"><p class="muted">Seleziona un giorno per vedere gli orari.</p></div></div>
+              <div class="panel"><h3 data-i18n="slots.title"></h3><div id="slots" aria-live="polite"></div></div>
             </div>
           </div>
           <form class="step" id="step-2" hidden novalidate>
-            <div class="chosen"><div><span class="label">La tua prenotazione</span><strong id="chosen-text"></strong></div><button type="button" class="link" id="back">Modifica</button></div>
+            <div class="chosen"><div><span class="label" data-i18n="chosen.label"></span><strong id="chosen-text"></strong></div><button type="button" class="link" id="back" data-i18n="chosen.edit"></button></div>
             <div class="fields">
-              <div class="field"><label for="name">Nome e cognome</label><input id="name" autocomplete="name" maxlength="120" required><p class="field-error" id="name-error"></p></div>
-              <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" maxlength="200"><p class="field-error" id="email-error"></p></div>
-              <div class="field"><label for="phone">Telefono</label><input id="phone" type="tel" autocomplete="tel" maxlength="40"><p class="field-error" id="phone-error"></p></div>
+              <div class="field"><label for="name" data-i18n="form.name"></label><input id="name" autocomplete="name" maxlength="120" required><p class="field-error" id="name-error"></p></div>
+              <div class="field"><label for="email" data-i18n="form.email"></label><input id="email" type="email" autocomplete="email" maxlength="200"><p class="field-error" id="email-error"></p></div>
+              <div class="field"><label for="phone" data-i18n="form.phone"></label><input id="phone" type="tel" autocomplete="tel" maxlength="40"><p class="field-error" id="phone-error"></p></div>
             </div>
-            <p class="hint">Indica almeno email o telefono.</p>
-            <button class="btn btn-block" id="submit" type="submit">Conferma la prenotazione</button>
+            <p class="hint" data-i18n="form.hint"></p>
+            <button class="btn btn-block" id="submit" type="submit" data-i18n="form.submit"></button>
           </form>
           <div class="step confirmation" id="step-3" hidden tabindex="-1">
             <div class="check" aria-hidden="true"><svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-17"/></svg></div>
-            <h3>Grazie per aver prenotato!</h3>
-            <p>La tua prenotazione è confermata.</p>
+            <h3 data-i18n="conf.title"></h3>
+            <p data-i18n="conf.text"></p>
             <dl class="receipt">
-              <div><dt>Giorno</dt><dd id="c-date"></dd></div><div><dt>Orario</dt><dd id="c-time"></dd></div>
-              <div><dt>Persone</dt><dd id="c-party"></dd></div><div><dt>Codice</dt><dd id="c-ref"></dd></div>
+              <div><dt data-i18n="conf.date"></dt><dd id="c-date"></dd></div><div><dt data-i18n="conf.time"></dt><dd id="c-time"></dd></div>
+              <div><dt data-i18n="conf.party"></dt><dd id="c-party"></dd></div><div><dt data-i18n="conf.ref"></dt><dd id="c-ref"></dd></div>
             </dl>
-            <button type="button" class="link" id="again">Nuova prenotazione</button>
+            <p class="muted" data-i18n="conf.see"></p>
           </div>
         </div>
       </div>
@@ -105,27 +116,28 @@
     <section class="section" id="dove" aria-labelledby="dove-title">
       <div class="wrap split">
         <div class="reveal">
-          <p class="eyebrow dark">Dove siamo</p><h2 id="dove-title">Nel cuore di Salerno</h2>
-          <p>Osteria Angolo Masuccio, Salerno (SA).</p>
-          <h3 class="small">Orari</h3>
+          <p class="eyebrow dark" data-i18n="where.eyebrow"></p><h2 id="dove-title" data-i18n="where.title"></h2>
+          <p data-i18n="where.addr"></p>
+          <h3 class="small" data-i18n="where.hours"></h3>
           <ul class="hours">
-            <li><span>Lunedì &ndash; Giovedì</span><span>12:30&ndash;15:00 &middot; 19:30&ndash;23:00</span></li>
-            <li><span>Venerdì &ndash; Sabato</span><span>12:30&ndash;15:00 &middot; 19:30&ndash;23:30</span></li>
-            <li><span>Domenica</span><span>12:30&ndash;15:30</span></li>
+            <li><span data-i18n="hours.1"></span><span>12:30–15:00 · 19:30–23:00</span></li>
+            <li><span data-i18n="hours.2"></span><span>12:30–15:00 · 19:30–23:30</span></li>
+            <li><span data-i18n="hours.3"></span><span>12:30–15:30</span></li>
           </ul>
-          <p class="hint">Orari indicativi: la disponibilità reale è nel modulo di prenotazione.</p>
+          <p class="hint" data-i18n="where.hint"></p>
           <div class="actions">
-            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=40.6777023,14.7612513" target="_blank" rel="noopener">Indicazioni</a>
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=40.6777023,14.7612513" target="_blank" rel="noopener" data-i18n="where.directions"></a>
             <a class="btn btn-outline" href="https://www.instagram.com/osteriaangolomasuccio/" target="_blank" rel="noopener">Instagram</a>
             <a class="btn btn-outline" href="https://www.facebook.com/OsteriaAngoloMasuccio" target="_blank" rel="noopener">Facebook</a>
           </div>
         </div>
-        <div class="map reveal"><iframe title="Mappa dell'Osteria Angolo Masuccio" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=14.7580%2C40.6760%2C14.7645%2C40.6795&amp;layer=mapnik&amp;marker=40.6777023%2C14.7612513"></iframe></div>
+        <div class="map reveal"><iframe data-i18n-attrs="title:where.map" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=14.7580%2C40.6760%2C14.7645%2C40.6795&amp;layer=mapnik&amp;marker=40.6777023%2C14.7612513"></iframe></div>
       </div>
     </section>
   </main>
-  <footer class="site-footer"><div class="wrap"><strong>Osteria Angolo Masuccio</strong><span>Salerno</span><span>Prenotazioni con Restomate</span><a href="crediti.html">Crediti foto</a></div></footer>
-  <dialog id="lightbox" class="lightbox" aria-label="Foto ingrandita"><button type="button" id="lb-close" aria-label="Chiudi">&times;</button><div id="lb-img" role="img" aria-label="Foto"></div></dialog>
+  <footer class="site-footer"><div class="wrap"><strong>Osteria Angolo Masuccio</strong><span>Salerno</span><span data-i18n="footer.book"></span><a href="crediti.html" data-i18n="footer.credits"></a></div></footer>
+  <dialog id="lightbox" class="lightbox"><button type="button" id="lb-close" data-i18n-attrs="aria-label:gal.close">&times;</button><div id="lb-img" role="img"></div></dialog>
+  <script src="i18n.js"></script>
   <script src="app.js" defer></script>
 </body>
 </html>

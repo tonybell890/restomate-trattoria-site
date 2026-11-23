@@ -1,122 +1,131 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Trattoria da Mario · Cucina di casa</title>
-    <meta name="description" content="Sito dimostrativo della Trattoria da Mario con modulo di prenotazione collegato a Restomate." />
-    <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Osteria Angolo Masuccio | Salerno</title>
+  <meta name="description" content="Osteria Angolo Masuccio a Salerno: cucina del territorio, vini campani e atmosfera conviviale. Prenota online.">
+  <meta name="theme-color" content="#16110e">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="demo-banner" role="note">Sito dimostrativo: le prenotazioni vengono inviate a Restomate in ambiente di test.</div>
-
-    <header class="site-header">
-        <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">M</span><span data-restaurant-name>Trattoria da Mario</span></a>
-        <nav aria-label="Principale">
-            <a href="#menu">Il menù</a>
-            <a href="#storia">La storia</a>
-            <a class="nav-cta" href="#prenota">Prenota</a>
-        </nav>
-    </header>
-
-    <main id="top">
-        <section class="hero">
-            <p class="eyebrow">Dal 1978, cucina di casa</p>
-            <h1>Una tavola apparecchiata per voi</h1>
-            <p class="lead">Pasta fatta a mano, ragù che cuoce per ore e dolci della nonna. Prenotate il vostro tavolo in meno di un minuto.</p>
-            <a class="button" href="#prenota">Prenota un tavolo</a>
-        </section>
-
-        <section id="menu" class="section">
-            <h2>Il menù della casa</h2>
-            <div class="cards">
-                <article class="card"><h3>Antipasti</h3><p>Tagliere di salumi e formaggi, parmigiana di melanzane, crostini al fegatino.</p></article>
-                <article class="card"><h3>Primi</h3><p>Tagliatelle al ragù, gnocchi al pomodoro fresco, lasagne della domenica.</p></article>
-                <article class="card"><h3>Secondi</h3><p>Brasato al vino rosso, cotoletta alla milanese, pollo alla cacciatora.</p></article>
-                <article class="card"><h3>Dolci</h3><p>Tiramisù, panna cotta ai frutti di bosco, crostata di marmellata.</p></article>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="Osteria Angolo Masuccio"><span class="brand-mark">AM</span><span class="brand-text">Osteria<br><strong>Angolo Masuccio</strong></span></a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav"><span class="sr-only">Menu</span><i></i><i></i><i></i></button>
+    <nav id="nav" class="nav" aria-label="Principale">
+      <a href="#storia">La storia</a><a href="#menu">Menu</a><a href="#galleria">Galleria</a><a href="#dove">Dove siamo</a>
+      <a class="btn btn-small" href="#prenota">Prenota</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-bg" data-parallax></div>
+      <div class="hero-inner">
+        <p class="eyebrow">Salerno &middot; Centro storico</p>
+        <h1 id="hero-title">Osteria<br>Angolo Masuccio</h1>
+        <p class="lead">Sapori campani, ingredienti del territorio e la convivialità di un angolo di Salerno.</p>
+        <div class="actions"><a class="btn" href="#prenota">Prenota un tavolo</a><a class="btn btn-ghost" href="#menu">Sfoglia il menu</a></div>
+      </div>
+    </section>
+    <section class="section" id="storia" aria-labelledby="storia-title">
+      <div class="wrap split">
+        <div class="reveal">
+          <p class="eyebrow dark">La nostra storia</p>
+          <h2 id="storia-title">Una tavola semplice, fatta con cura</h2>
+          <p>All'angolo tra vicoli e storia, l'osteria propone una cucina onesta: piatti della tradizione salernitana, pesce e verdure di stagione, paste fatte con calma e una cantina di vini campani.</p>
+          <p>Qui si viene per fermarsi: due chiacchiere, un calice, un piatto che sa di casa.</p>
+          <ul class="facts"><li><strong>Cucina</strong><span>del territorio</span></li><li><strong>Vini</strong><span>campani</span></li><li><strong>Atmosfera</strong><span>conviviale</span></li></ul>
+        </div>
+        <div class="photo-stack reveal"><div class="photo p1" role="img" aria-label="Piatto della casa"></div><div class="photo p2" role="img" aria-label="Interno dell'osteria"></div></div>
+      </div>
+    </section>
+    <section class="section dark" id="menu" aria-labelledby="menu-title">
+      <div class="wrap">
+        <div class="section-head reveal"><p class="eyebrow">Il menu</p><h2 id="menu-title">Cosa porti a tavola</h2>
+          <p class="muted-light">Il menu cambia con le stagioni. Chiedi in sala le proposte del giorno.</p></div>
+        <div class="tabs" id="menu-tabs" role="tablist" aria-label="Categorie del menu"></div>
+        <div class="menu-panel" id="menu-panel" role="tabpanel" aria-live="polite"></div>
+      </div>
+    </section>
+    <section class="section" id="galleria" aria-labelledby="gal-title">
+      <div class="wrap">
+        <div class="section-head reveal"><p class="eyebrow dark">Galleria</p><h2 id="gal-title">Un assaggio dell'atmosfera</h2></div>
+        <div class="gallery reveal" id="gallery"></div>
+        <p class="social reveal">Altre foto su <a href="https://www.instagram.com/osteriaangolomasuccio/" target="_blank" rel="noopener">Instagram</a> e <a href="https://www.facebook.com/OsteriaAngoloMasuccio" target="_blank" rel="noopener">Facebook</a>.</p>
+      </div>
+    </section>
+    <section class="section book" id="prenota" aria-labelledby="book-title">
+      <div class="wrap">
+        <div class="section-head reveal"><p class="eyebrow">Prenota</p><h2 id="book-title">Riserva il tuo tavolo</h2><p class="muted-light">Conferma immediata, senza telefonate.</p></div>
+        <div class="book-card reveal">
+          <ol class="steps" id="steps" aria-label="Avanzamento">
+            <li class="active" data-step="1"><span>1</span> Giorno e orario</li>
+            <li data-step="2"><span>2</span> I tuoi dati</li>
+            <li data-step="3"><span>3</span> Conferma</li>
+          </ol>
+          <div class="status" id="status" role="alert"></div>
+          <div class="step" id="step-1">
+            <div class="pick-grid">
+              <div class="panel">
+                <div class="party"><span class="label" id="party-name">Persone</span>
+                  <div class="stepper" role="group" aria-labelledby="party-name">
+                    <button type="button" id="party-minus" aria-label="Una persona in meno">&minus;</button>
+                    <output id="party-value" aria-live="polite">2</output>
+                    <button type="button" id="party-plus" aria-label="Una persona in più">+</button>
+                  </div></div>
+                <div class="cal-bar"><button type="button" id="cal-prev" aria-label="Mese precedente">&lsaquo;</button><strong id="cal-title"></strong><button type="button" id="cal-next" aria-label="Mese successivo">&rsaquo;</button></div>
+                <div class="cal-grid" id="calendar-grid"></div>
+              </div>
+              <div class="panel"><h3>Orari disponibili</h3><div id="slots" aria-live="polite"><p class="muted">Seleziona un giorno per vedere gli orari.</p></div></div>
             </div>
-        </section>
-
-        <section id="storia" class="section narrow">
-            <h2>La storia</h2>
-            <p>Mario ha aperto questa trattoria con tre tavoli e una ricetta di famiglia. Oggi la cucina è la stessa, la sala è un po' più grande e il benvenuto non è cambiato.</p>
-        </section>
-
-        <section id="prenota" class="section booking" aria-labelledby="booking-title">
-            <h2 id="booking-title">Prenota un tavolo</h2>
-            <p class="muted">Scegli il numero di persone, il giorno e l'orario. La conferma è immediata.</p>
-            <div id="booking-status" class="status" role="status" aria-live="polite"></div>
-
-            <div id="booking-grid" class="booking-grid">
-                <div class="panel">
-                    <h3><span class="step">1</span> Quanti siete?</h3>
-                    <div class="party">
-                        <button type="button" id="party-minus" class="round" aria-label="Una persona in meno">−</button>
-                        <output id="party-value" aria-live="polite">2</output>
-                        <button type="button" id="party-plus" class="round" aria-label="Una persona in più">+</button>
-                        <span class="muted" id="party-label">persone</span>
-                    </div>
-                    <p class="muted small">Per gruppi di più di 12 persone chiamateci.</p>
-
-                    <h3><span class="step">2</span> Scegli il giorno</h3>
-                    <div class="calendar">
-                        <div class="cal-nav">
-                            <button type="button" id="cal-prev" class="round" aria-label="Mese precedente">‹</button>
-                            <strong id="cal-title" aria-live="polite"></strong>
-                            <button type="button" id="cal-next" class="round" aria-label="Mese successivo">›</button>
-                        </div>
-                        <div id="calendar-grid" class="cal-grid"></div>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3><span class="step">3</span> Scegli l'orario</h3>
-                    <div id="slots" class="slots" aria-live="polite"><p class="muted">Seleziona prima un giorno.</p></div>
-
-                    <form id="booking-form" novalidate>
-                        <h3><span class="step">4</span> I tuoi dati</h3>
-                        <p id="summary" class="summary muted">Scegli giorno e orario per continuare.</p>
-                        <div class="field">
-                            <label for="name">Nome e cognome *</label>
-                            <input id="name" name="name" type="text" autocomplete="name" maxlength="200" aria-describedby="name-error" />
-                            <p id="name-error" class="field-error" role="alert"></p>
-                        </div>
-                        <div class="field">
-                            <label for="email">Email</label>
-                            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="email-error" />
-                            <p id="email-error" class="field-error" role="alert"></p>
-                        </div>
-                        <div class="field">
-                            <label for="phone">Telefono</label>
-                            <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" aria-describedby="phone-error contact-hint" />
-                            <p id="contact-hint" class="muted small">Indica almeno un'email o un telefono.</p>
-                            <p id="phone-error" class="field-error" role="alert"></p>
-                        </div>
-                        <button type="submit" id="submit" class="button" disabled>Conferma la prenotazione</button>
-                    </form>
-                </div>
+          </div>
+          <form class="step" id="step-2" hidden novalidate>
+            <div class="chosen"><div><span class="label">La tua prenotazione</span><strong id="chosen-text"></strong></div><button type="button" class="link" id="back">Modifica</button></div>
+            <div class="fields">
+              <div class="field"><label for="name">Nome e cognome</label><input id="name" autocomplete="name" maxlength="120" required><p class="field-error" id="name-error"></p></div>
+              <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" maxlength="200"><p class="field-error" id="email-error"></p></div>
+              <div class="field"><label for="phone">Telefono</label><input id="phone" type="tel" autocomplete="tel" maxlength="40"><p class="field-error" id="phone-error"></p></div>
             </div>
-
-            <div id="confirmation" class="confirmation" hidden>
-                <h3 id="confirmation-title" tabindex="-1">Prenotazione confermata</h3>
-                <p>Grazie <strong id="c-name"></strong>, vi aspettiamo!</p>
-                <dl>
-                    <dt>Giorno</dt><dd id="c-date"></dd>
-                    <dt>Orario</dt><dd id="c-time"></dd>
-                    <dt>Persone</dt><dd id="c-party"></dd>
-                    <dt>Riferimento</dt><dd id="c-ref"></dd>
-                </dl>
-                <button type="button" id="new-booking" class="button secondary">Nuova prenotazione</button>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <p><span data-restaurant-name>Trattoria da Mario</span> · Via Immaginaria 12, Cittàfinta · Tel. 000 000000</p>
-        <p class="muted small">Sito di prova costruito per testare l'integrazione con Restomate. Indirizzo e telefono sono inventati.</p>
-    </footer>
-
-    <script type="module" src="app.js"></script>
+            <p class="hint">Indica almeno email o telefono.</p>
+            <button class="btn btn-block" id="submit" type="submit">Conferma la prenotazione</button>
+          </form>
+          <div class="step confirmation" id="step-3" hidden tabindex="-1">
+            <div class="check" aria-hidden="true"><svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-17"/></svg></div>
+            <h3>Grazie per aver prenotato!</h3>
+            <p>La tua prenotazione è confermata.</p>
+            <dl class="receipt">
+              <div><dt>Giorno</dt><dd id="c-date"></dd></div><div><dt>Orario</dt><dd id="c-time"></dd></div>
+              <div><dt>Persone</dt><dd id="c-party"></dd></div><div><dt>Codice</dt><dd id="c-ref"></dd></div>
+            </dl>
+            <button type="button" class="link" id="again">Nuova prenotazione</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="dove" aria-labelledby="dove-title">
+      <div class="wrap split">
+        <div class="reveal">
+          <p class="eyebrow dark">Dove siamo</p><h2 id="dove-title">Nel cuore di Salerno</h2>
+          <p>Osteria Angolo Masuccio, Salerno (SA).</p>
+          <h3 class="small">Orari</h3>
+          <ul class="hours">
+            <li><span>Lunedì &ndash; Giovedì</span><span>12:30&ndash;15:00 &middot; 19:30&ndash;23:00</span></li>
+            <li><span>Venerdì &ndash; Sabato</span><span>12:30&ndash;15:00 &middot; 19:30&ndash;23:30</span></li>
+            <li><span>Domenica</span><span>12:30&ndash;15:30</span></li>
+          </ul>
+          <p class="hint">Orari indicativi: la disponibilità reale è nel modulo di prenotazione.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=40.6777023,14.7612513" target="_blank" rel="noopener">Indicazioni</a>
+            <a class="btn btn-outline" href="https://www.instagram.com/osteriaangolomasuccio/" target="_blank" rel="noopener">Instagram</a>
+            <a class="btn btn-outline" href="https://www.facebook.com/OsteriaAngoloMasuccio" target="_blank" rel="noopener">Facebook</a>
+          </div>
+        </div>
+        <div class="map reveal"><iframe title="Mappa dell'Osteria Angolo Masuccio" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=14.7580%2C40.6760%2C14.7645%2C40.6795&amp;layer=mapnik&amp;marker=40.6777023%2C14.7612513"></iframe></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="wrap"><strong>Osteria Angolo Masuccio</strong><span>Salerno</span><span>Prenotazioni con Restomate</span></div></footer>
+  <dialog id="lightbox" class="lightbox" aria-label="Foto ingrandita"><button type="button" id="lb-close" aria-label="Chiudi">&times;</button><div id="lb-img" role="img" aria-label="Foto"></div></dialog>
+  <script src="app.js" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Trattoria da Mario - sample booking site
+# Osteria Angolo Masuccio - sample booking site
 
 A fake restaurant website used to test the Restomate public booking API from a browser. It is a static HTML/CSS/JS page (no build step, no external dependencies) served by a minimal ASP.NET Core host.
 
@@ -6,7 +6,7 @@ The page lets a guest choose the party size, pick a day on a calendar, see the a
 
 ## Run it
 
-1. In the Restomate dashboard, open the restaurant "Trattoria da Mario" and copy its ID (tab **Integrazione API**). Make sure it is active and has tables and opening hours.
+1. In the Restomate dashboard, open the restaurant "Osteria Angolo Masuccio" and copy its ID (tab **Integrazione API**). Make sure it is active and has tables and opening hours.
 2. Put the ID in `wwwroot/config.json` (`restaurantId`), or open the site with `?restaurant=<id>` appended to the address. If Restomate does not run on `https://localhost:7145`, change `apiBase` or add `?api=<origin>`.
 3. Start Restomate (`dotnet run --project src/Restomate.Web --launch-profile https`). Restart it after pulling these changes: the slots endpoint and CORS settings are new.
 4. Start this site (`dotnet run --project samples/TrattoriaDaMario --launch-profile https`) and open https://localhost:7300. In Visual Studio you can set both projects as startup projects.

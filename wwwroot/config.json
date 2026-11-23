@@ -1,5 +1,5 @@
 {
   "restaurantName": "Trattoria da Mario",
-  "apiBase": "https://localhost:7145",
-  "restaurantId": "278aa47b-0206-43b9-97e9-d2d16c61ba38"
+  "apiBase": "https://restomate-test-ab3k9.azurewebsites.net",
+  "restaurantId": "f4179182-7153-4801-b2ee-1505938e8a58"
 }
